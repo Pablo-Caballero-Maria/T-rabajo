@@ -16,4 +16,4 @@ if __name__ == "__main__":
     # plot_sdwi()
     # plot_sdwi_segmentated()
     # plot_heatmap_py()
-    # plot_evolution()
+    plot_evolution()

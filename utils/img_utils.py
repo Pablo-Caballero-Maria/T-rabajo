@@ -49,7 +49,7 @@ def load_bands_from_month(month, processed):
 
 
 def get_false_color_image(vv_img, vh_img):
-    # Create a false color image (R=VV, G=VH, B=SDWI), where SDWI is ln(10 * VV * VH)
+    # Create a false color image (R=VV, G=VH, B=SDWI), where SDWI is ln(10 * VV * VH) ** 2
     # Avoid division by zero
     epsilon = 1e-10
 
@@ -61,9 +61,7 @@ def get_false_color_image(vv_img, vh_img):
         (vh_img - np.min(vh_img)) / (np.max(vh_img) - np.min(vh_img) + epsilon) * 255
     )
 
-    # Apply a gamma correction to enhance contrast and suppress low values
-    gamma = 2.0  # Adjust this value - higher means more aggressive thresholding
-    sdwi = np.log(10 * vv_img * vh_img + epsilon) ** gamma
+    sdwi = np.log(200 * vv_img * vh_img + epsilon) ** 2
     sdwi_norm = (sdwi - np.min(sdwi)) / (np.max(sdwi) - np.min(sdwi) + epsilon) * 255
 
     # Create RGB image

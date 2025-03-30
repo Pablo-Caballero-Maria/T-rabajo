@@ -1,16 +1,13 @@
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from scipy import stats
+from scipy.interpolate import PchipInterpolator
 
 from utils.img_utils import (MONTHS, get_false_color_image,
                              load_bands_from_month)
 
 
 def plot_evolution():
-
-    # Threshold for filtering SDWI values
-    threshold = 0
 
     # Lists to store data for plotting
     month_indices = []  # X-axis (numeric month indices)
@@ -29,28 +26,31 @@ def plot_evolution():
         # Normalize SDWI to [0, 1]
         sdwi_norm = (sdwi - np.min(sdwi)) / (np.max(sdwi) - np.min(sdwi) + 1e-10)
 
-        # Filter values above threshold
-        high_sdwi = sdwi_norm[sdwi_norm > threshold]
+        # Store data for this month
+        month_indices.append(idx + 1)  # 1-based month index
+        month_labels.append(month.capitalize())
+        sdwi_means.append(np.mean(sdwi_norm))
 
-        if len(high_sdwi) > 0:
-            # Store data for this month
-            month_indices.append(idx + 1)  # 1-based month index
-            month_labels.append(month.capitalize())
-            sdwi_means.append(np.mean(high_sdwi))
+    # Create smooth interpolated curve
+    x_smooth = np.linspace(min(month_indices), max(month_indices), 300)
+
+    # Create a smooth interpolation
+    pchip_interp = PchipInterpolator(month_indices, sdwi_means)
+    y_smooth = pchip_interp(x_smooth)
 
     # Create figure
     fig = go.Figure()
 
     fig.add_trace(
         go.Scatter(
-            x=month_indices,
-            y=sdwi_means,
+            x=x_smooth,
+            y=y_smooth,
             mode="lines",
-            name="Monthly Means",
+            name="Trend line",
             marker=dict(color="black", size=12, symbol="circle"),
         )
     )
-        
+
     # Update layout
     fig.update_layout(
         title="Monthly Evolution of High SDWI Values",
@@ -60,7 +60,7 @@ def plot_evolution():
             tickvals=month_indices,
             ticktext=month_labels,
         ),
-        yaxis=dict(title="SDWI Value", range=[0, 1]),
+        yaxis=dict(title="SDWI Value", range=[0.2, 0.6]),
         height=600,
         width=1200,
         legend_title="Month",
