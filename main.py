@@ -5,6 +5,7 @@ from plotters.plot_heatmap import plot_heatmap_py
 from plotters.plot_histograms import plot_histograms
 from plotters.plot_SDWI import plot_sdwi
 from plotters.plot_sdwi_segmentated import plot_sdwi_segmentated
+from plotters.plot_log_comparison import plot_log_comparison
 from utils.img_utils import save_images
 
 if __name__ == "__main__":
@@ -15,5 +16,6 @@ if __name__ == "__main__":
     # plot_histograms('vh')
     # plot_sdwi()
     # plot_sdwi_segmentated()
-    # plot_heatmap_py()
-    plot_evolution()
+    plot_heatmap_py()
+    # plot_evolution()
+    # plot_log_comparison()

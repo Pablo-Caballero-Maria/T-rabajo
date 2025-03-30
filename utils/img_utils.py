@@ -82,10 +82,10 @@ def save_images():
         # First denoise the images
         print(f"Applying denoising to images for month: {month}")
         sdwi_norm_denoised = denoise_image_median(sdwi_norm)
-
+        sdwi_norm_denoised = denoise_image_bm3d(sdwi_norm_denoised)
         # Enlarge the images
         print(f"Enlarging images for month: {month}")
-        sdwi_norm_enlarged = enlarge_image_nearest_neighbor(sdwi_norm_denoised, 2)
+        sdwi_norm_enlarged = enlarge_image_nedi(sdwi_norm_denoised)
 
         # Save the enlarged images
         output_dir = Path("images_processed", month)
